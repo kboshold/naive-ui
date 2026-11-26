@@ -1,0 +1,74 @@
+name: Native attrs proof
+
+on:
+  push:
+    branches: [proof/native-attrs]
+  workflow_dispatch:
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - run: pnpm install
+
+      - run: pnpm exec playwright install --with-deps chromium firefox webkit
+
+      - name: Proof
+        run: bash proof/run.sh
+        env:
+          PROOF_BROWSERS: chromium firefox webkit
+
+      - name: Report
+        if: always()
+        run: cat proof/out/report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proof
+          path: |
+            proof/out
+            !proof/out/keys.json
+
+  # Two wrong annotations on purpose, the proof has to find both
+  control:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+
+      - run: corepack enable
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - run: pnpm install
+
+      - run: git apply proof/control.patch
+
+      - name: Proof has to fail
+        run: |
+          if bash proof/run.sh > control.log; then
+            cat control.log
+            echo "the proof passed with wrong annotations"
+            exit 1
+          fi
+          cat control.log
+          grep -q 'NCountdown' control.log
+          grep -q 'NDrawer.*aria-modal' control.log
+        env:
+          PROOF_BROWSERS: ""
+
+      - name: Report
+        if: always()
+        run: cat proof/out/report.md >> "$GITHUB_STEP_SUMMARY"

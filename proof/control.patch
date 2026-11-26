@@ -1,0 +1,31 @@
+diff --git a/src/countdown/index.ts b/src/countdown/index.ts
+index eed7e1cf3..9c9ed569b 100644
+--- a/src/countdown/index.ts
++++ b/src/countdown/index.ts
+@@ -1,4 +1,12 @@
+-export { countdownProps, default as NCountdown } from './src/Countdown'
++import type { HTMLAttributes } from 'vue'
++import type { WithNativeAttrs } from '../_utils'
++import NCountdownImpl from './src/Countdown'
++
++export { countdownProps } from './src/Countdown'
++export const NCountdown: WithNativeAttrs<
++  typeof NCountdownImpl,
++  HTMLAttributes
++> = NCountdownImpl
+ export type {
+   CountdownInst,
+   CountdownProps,
+diff --git a/src/drawer/index.ts b/src/drawer/index.ts
+index 6b97ad821..410f01f5b 100644
+--- a/src/drawer/index.ts
++++ b/src/drawer/index.ts
+@@ -14,7 +14,7 @@ export type {
+ 
+ export const NDrawer: WithNativeAttrs<
+   typeof NDrawerImpl,
+-  Omit<HTMLAttributes, 'role' | 'aria-modal'>
++  Omit<HTMLAttributes, 'role'>
+ > = NDrawerImpl
+ export const NDrawerContent: WithNativeAttrs<
+   typeof NDrawerContentImpl,

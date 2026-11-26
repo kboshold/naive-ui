@@ -1,0 +1,34 @@
+{
+  "keys": {
+    "NAlert": { "missing": ["role"], "why": "sets its own role" },
+    "NButton": {
+      "extra": ["download", "href", "hreflang", "media", "ping", "rel", "target", "referrerpolicy"],
+      "why": "anchor attrs for tag=\"a\""
+    },
+    "NDrawer": { "missing": ["role", "aria-modal"], "why": "sets its own role and aria-modal" },
+    "NIcon": { "missing": ["role"], "why": "sets its own role" },
+    "NImage": { "missing": ["role"], "why": "sets its own role" },
+    "NInfiniteScroll": { "missing": ["role"], "why": "root is the scrollbar, which sets its own role" },
+    "NMenu": { "missing": ["role"], "why": "sets its own role" },
+    "NModal": { "missing": ["aria-modal"], "why": "sets its own aria-modal" },
+    "NPopselect": {
+      "missing": ["onFocus", "onBlur", "onKeydown", "onKeyup", "onScroll", "onToggle"],
+      "why": "consumed by the internal select menu"
+    },
+    "NScrollbar": { "missing": ["role"], "why": "sets its own role" },
+    "NVirtualList": { "missing": ["role"], "why": "sets its own role" }
+  },
+  "delegated": {
+    "NInfiniteScroll": ["onScroll", "onWheel"],
+    "NScrollbar": ["onWheel"]
+  },
+  "combination": {
+    "NInfiniteScroll": { "issues": ["listeners lost: onScroll, onWheel"] },
+    "NScrollbar": { "issues": ["listeners lost: onWheel"] },
+    "NMention": {
+      "issues": [],
+      "error": "inputElRef",
+      "why": "a timer reads the input ref after the unmount"
+    }
+  }
+}
